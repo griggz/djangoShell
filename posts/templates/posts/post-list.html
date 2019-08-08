@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href='{% static "posts/css/posts.css" %}'/>
+{% endblock %}
+
+{% block content %}
+{% include "posts/messages_display.html" %}
+
+<div class="container-fluid">
+    <h1 style="margin-top: 0">{{ title }}</h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="input-group">
+                <form method='GET' action="">
+                    <input type="text" name='q' class="form-control"
+                           placeholder="Search for..."
+                           value="{{ request.GET.q }}">
+                </form>
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">Go!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+    <br/>
+    <div class="row">
+        {% for obj in object_list %}
+        <div class="col-12 col-md-10 mb-3 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    {% if obj.unsplash_url %}
+                    <img src="{{ obj.unsplash_url }}" class="card-img-top"/>
+                <small class="image_source"><a href='https://unsplash.com/photos/{{ obj.post_image }}' TARGET="_blank">Image Source</a></small>
+                {% endif %}
+                    <h1 class="card-title">
+                        <a href="{% url 'posts:detail' obj.slug %}">{{ obj.title }}</a>
+                        {% if obj.publish > recent and obj.publish <= today and obj.draft == False %}
+                        <small class="new_post"> NEW</small>
+                        {% endif %}
+                        {% if obj.draft %}
+                        <small class="draft"> Draft</small>
+                        {% endif %}
+                        {% if obj.publish > today %}
+                        <small class="future_post"> (Future Post)</small>
+                        {% endif %}
+                    </h1>
+                    <h4>
+                        <small class="publish_date"> Published: {{ obj.publish }}
+                        </small>
+                    </h4>
+                    <h4>{% if obj.user %}Author: {{ obj.user }}{% endif %} | Read time: {% if obj.read_time <= 1 %} < 1 min {% else %}{{ obj.read_time }} min{% endif %}</h4>
+                    <hr/>
+                    {{ obj.get_markdown|truncatechars_html:250 }}
+                    <p align="right"><a href="{% url "posts:detail" obj.slug %}" class="btn btn-default" role="button">READ MORE</a>
+                </div>
+            </div>
+        </div>
+        <div class='col-sm-12'>
+            <hr/>
+        </div>
+    </div>
+    <div class='row'><br/>
+        {% endfor %}
+    </div>
+
+    <div class="row" align="center">
+        <div class="pagination" style="color: white">
+            <ul class="pager">
+                {% if object_list.has_previous %}
+                <li>
+                    <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+                </li>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+                </span>
+
+                {% if object_list.has_next %}
+                <li>
+                    <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

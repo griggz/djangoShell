@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags%}
+
+{% block head %}
+<link rel="stylesheet" href='{% static ' posts/css/posts.css' %}' />
+{% endblock %}
+
+{% block content %}
+{% include "posts/messages_display.html" %}
+<br/>
+
+
+<div class="row">
+    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0">
+        <div class="thumbnail">
+            <h1>Confirm Delete</h1>
+            <form method="POST" action=".">
+                {% csrf_token %}
+                <p>Are you sure you want to delete: "{{ object.content }}"?</p>
+                <input type="submit" value="Confirm" class="btn btn-warning">
+                <a href="{{ object.get_absolute_url }}"
+                   class="btn btn-default">Cancel</a>
+            </form>
+            <hr/>
+        </div>
+    </div>
+</div>
+{% endblock %}

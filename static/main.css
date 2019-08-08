@@ -1,0 +1,12 @@
+.comment-reply{
+    display:none;
+}
+
+.username {
+    padding: 15px 0 15px 15px;
+    font-family: 'Nova Flat', serif;
+}
+
+#mainNavBar {
+    font-family: 'Nova Flat', serif;
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% include "css.html" %}
+  {% include "js.html" %}
+
+  <title>MySite</title>
+
+  {% block head %}
+  {% endblock %}
+
+  <script>
+      $(".hover").mouseleave(
+          function () {
+              $(this).removeClass("hover");
+          }
+      );
+  </script>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">MySite</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/"><i class="fas fa-home fa-lg"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'posts:list' %}">Blog {% if new_posts == True %}
+            <span class="label label-default">New</span>{% endif %}</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Apps
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">LETS BUILD SOME SHIT</a>
+{#          <a class="dropdown-item" href="#">Another action</a>#}
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Seriously</a>
+        </div>
+      </li>
+    {% if request.user.is_staff or request.user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">{{ request.user.username }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt fa-lg"></i></a></li>
+    {% elif request.user.is_authenticated %}
+            <li class="username">{{ request.user.username }}</li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt fa-lg"></i></a></li>
+    {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt fa-lg"></i> Login</a></li>
+    {% endif %}
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+</head>
+
+<body>
+{% block title %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
